@@ -1,4 +1,4 @@
-package com.andersonav91.integration.datacorrector;
+package com.trueaccord.integration.datacorrector;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

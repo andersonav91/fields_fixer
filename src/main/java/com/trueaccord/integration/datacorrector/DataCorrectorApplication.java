@@ -27,14 +27,14 @@ public class DataCorrectorApplication implements CommandLineRunner {
 
 	public String[][] complementaryData(){
 		String[][] returnData = { };
-		final String filePath = "E:\\Downloads\\Demo1.csv";
+		final String filePath = "E:\\Downloads\\abc.txt";
 		try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
 			String line;
 			while ((line = br.readLine()) != null) {
 				returnData = ArrayUtils.add(returnData, line.split(","));
 			}
 		} catch (IOException ioException) {
-			LOG.info("File " + filePath + "not found");
+			LOG.info("File " + filePath + " not found");
 		}
 		return returnData;
 	}
@@ -51,7 +51,7 @@ public class DataCorrectorApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
-		final String finalFilePath = "E:\\Downloads\\Demo.txt";
+		final String finalFilePath = "E:\\Downloads\\fixed.txt";
 		String header = "";
 		String[][] complementaryData = this.complementaryData();
 		try (BufferedReader br = new BufferedReader(new FileReader(finalFilePath))) {
@@ -83,9 +83,12 @@ public class DataCorrectorApplication implements CommandLineRunner {
 
 					if ((! firstName.equalsIgnoreCase(newData[1]) ||
 							! lastName.equalsIgnoreCase(newData[3]) ||
-							! middleName.equalsIgnoreCase(newData[2])) && ! StringUtils.isEmpty(newData[0])) {
+							! middleName.equalsIgnoreCase(newData[2])) &&
+							! StringUtils.isEmpty(newData[0])) {
 						fields[firstNameIndex] = newData[1]; // first name
-						fields[middleNameIndex] = newData[2]; // middle name
+						if(! newData[2].equalsIgnoreCase("null")){
+							fields[middleNameIndex] = newData[2]; // middle name
+						}
 						fields[lastNameIndex] = newData[3]; // last name
 						invalidLines = ArrayUtils.add(invalidLines, fields);
 					} else if ((StringUtils.isEmpty(firstName) ||
@@ -140,7 +143,7 @@ public class DataCorrectorApplication implements CommandLineRunner {
 				out.println(header);
 				for(int i = 0; i < invalidLines.length; i ++) {
 					out.println(StringUtils.join(invalidLines[i], "|"));
-					LOG.info("Writing line " + i + ".");
+					LOG.info("Writing line " + (i + 1) + ".");
 				}
 				out.close();
 				LOG.info("File was written");
@@ -149,7 +152,7 @@ public class DataCorrectorApplication implements CommandLineRunner {
 			}
 
 		} catch (IOException ioException) {
-			LOG.info("File " + finalFilePath + "not found");
+			LOG.info("File " + finalFilePath + " not found");
 		}
 	}
 }
